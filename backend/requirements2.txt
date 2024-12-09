@@ -1,0 +1,1 @@
+pip install flask flask-cors flask-pymongo flask-bcrypt flask-restful pymongo werkzeug

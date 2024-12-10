@@ -7,7 +7,7 @@ const Navbar = () => {
 
   return (
     <nav>
-      <h2>System</h2>
+      
       {user ? (
         <>
           <Link to="/">Dashboard</Link>

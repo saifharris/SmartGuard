@@ -1,0 +1,150 @@
+:root {
+  --primary: #11176b;
+  --secondary: #472060;
+  --accent: #ffffff;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to bottom, var(--primary), var(--secondary));
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--accent);
+  opacity: 0.75;
+}
+
+.uploader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.uploader-form {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
+}
+
+.textfield,
+.file-input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 2px solid var(--accent);
+  background-color: transparent;
+  color: var(--accent);
+  font-size: 16px;
+}
+
+.textfield::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.textfield:focus,
+.file-input:focus {
+  outline: none;
+  border-color: var(--secondary);
+}
+
+.upload-button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--secondary);
+  color: var(--accent);
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.upload-button:hover {
+  background-color: var(--primary);
+}
+
+.upload-button:active {
+  transform: scale(0.98);
+  background-color: var(--accent);
+  color: var(--primary);
+}
+
+.main-button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 150px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--secondary);
+  color: var(--accent);
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-left: 40px;
+}
+
+.main-button:hover {
+  background-color: var(--primary);
+}
+
+.main-button:active {
+  transform: scale(0.98);
+  background-color: var(--accent);
+  color: var(--primary);
+}
+
+/* Loader Styles */
+.loaderClass {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+  z-index: 9999; /* Ensure loader is above everything */
+  color: var(--accent); /* Use accent color for text */
+}
+
+.simple-loader {
+  border: 8px solid rgba(255, 255, 255, 0.3); /* Light accent color */
+  border-top: 8px solid var(--accent); /* Accent color for loader */
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.script-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 20px;
+  color: var(--accent);
+}
+.loaderClass0 {
+  display: flex;
+  align-items: center;
+}
+.logo {
+  height: 220px;
+  width: 220px;
+}

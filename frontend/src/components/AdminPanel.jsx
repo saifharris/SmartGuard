@@ -9,7 +9,7 @@ import { IoMdAnalytics } from "react-icons/io";
 import { BsFilePersonFill } from "react-icons/bs";
 import { TbLogout } from "react-icons/tb";
 import Smanagers from "./adminutils/Smanagers.jsx";
-import Managers from "./adminutils/managers.jsx";
+import Managers from "./adminutils/Managers.jsx";
 import Histogram from "./adminutils/Histogram.jsx";
 import PieChart from "./adminutils/PieChart.jsx";
 import LineChart from "./adminutils/LineChart.jsx";

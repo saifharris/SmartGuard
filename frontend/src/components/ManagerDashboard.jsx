@@ -170,19 +170,35 @@ const ManagerDashboard = () => {
       alert("Please ensure at least two videos are available for tracking.");
       return;
     }
-
+  
+    // Add a '.' in front of the paths if they start with '/'
+    let adjustedVideo1 = video1;
+    let adjustedVideo2 = video2;
+  
+    if (video1.startsWith('/')) {
+      adjustedVideo1 = '.' + video1;
+    }
+    if (video2.startsWith('/')) {
+      adjustedVideo2 = '.' + video2;
+    }
+  
+    console.log("Starting tracking with videos:", adjustedVideo1, adjustedVideo2);
+  
     const payload = {
-      video1,
-      video2,
+      video1: adjustedVideo1,
+      video2: adjustedVideo2,
       output: "output.avi",
       conf: 0.3,
       iou_thresh: 0.3,
-      cos_thresh: 0.8,
+      cos_thresh: 0.8
     };
-
+  
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:8000/start_tracking", payload);
+
+      console.log("Payload:", payload);
+
+      const response = await axios.post("http://localhost:5000/api/start_tracking", payload);
       alert("Tracking started successfully: " + response.data.message);
     } catch (error) {
       console.error("Error starting tracking:", error);
@@ -192,6 +208,7 @@ const ManagerDashboard = () => {
     }
   };
 
+  
   return (
     <DashboardContainer>
       {/* <Navbar>

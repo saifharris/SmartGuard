@@ -231,7 +231,7 @@ const AdminPanel = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false); // Hide loader after 5 seconds
-    }, 5000);
+    }, 3000);
 
     return () => clearTimeout(timer); // Cleanup the timer
   }, []);

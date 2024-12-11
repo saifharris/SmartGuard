@@ -1,0 +1,21 @@
+.loaderClass {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: row;
+  }
+  
+  .loaderClass div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .loaderClass img,
+  .loaderClass .AtomLoader {
+    width: 300px;
+    height: 300px;
+    object-fit: contain;
+    margin-top: 20px;
+  }

@@ -110,46 +110,6 @@ def create_supermanager():
     user["_id"] = str(result.inserted_id)  # Convert ObjectId to string
     return jsonify({"message": "Supermanager created successfully", "user": user}), 201
 
-# @app.route("/api/auth/create-manager", methods=["POST"])
-# def create_manager():
-    data = request.form
-    username = data.get("username")
-    password = data.get("password")
-    parent_id = data.get("parentId")
-    video = request.files.get("video")
-
-    if not username or not password or not parent_id:
-        return jsonify({"error": "Missing required fields"}), 400
-
-    try:
-        # Hash the password
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-
-        # Save the video if provided
-        video_path = None
-        if video:
-            filename = secure_filename(video.filename)
-            video_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            video.save(video_path)
-
-        # Create the manager user
-        user = {
-            "username": username,
-            "password": hashed_password,
-            "role": "manager",
-            "parentId": ObjectId(parent_id),
-            "videoUrl": f"/uploads/{filename}" if video else None
-        }
-        result = users_collection.insert_one(user)
-
-        # Convert the inserted user's ObjectId to string
-        user["_id"] = str(result.inserted_id)
-        user["parentId"] = str(user["parentId"])  # Convert parentId to string
-
-        return jsonify({"message": "Manager created successfully", "user": user}), 201
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
 
 @app.route("/api/auth/create-manager", methods=["POST"])
 def create_manager():

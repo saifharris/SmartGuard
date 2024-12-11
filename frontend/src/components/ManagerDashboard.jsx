@@ -5,8 +5,8 @@ import styled from "styled-components";
 
 const DashboardContainer = styled.div`
   font-family: 'Poppins', sans-serif;
-  background: linear-gradient(145deg, #120428, #2b103d);
-  color: #ffffff;
+  background: #ffffff; /* Set background to white */
+  color: #000000; /* Adjust text color for better contrast */
   min-height: 100vh;
   padding: 20px;
 `;
@@ -61,26 +61,25 @@ const WelcomeMessage = styled.h3`
 
 const VideoGrid = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  flex-wrap: nowrap; /* Ensure videos are side by side */
+  justify-content: center; /* Center the videos */
+  gap: 5px; /* Add spacing between videos */
   padding: 20px;
-  gap: 20px;
 `;
 
 const VideoCard = styled.div`
-  width: 40%; /* 40% of the page width */
-  margin: 0 auto; /* Center-align within the grid */
+  width: 45%; /* Adjust width for better alignment */
   aspect-ratio: 16/9; /* Maintain a 16:9 ratio for video container */
-  background: #1f0933;
+  background: #f0f0f0; /* Light grey background for video cards */
   border-radius: 10px;
-  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
 
   &:hover {
     transform: scale(1.02);
     transition: all 0.3s ease;
-    box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.6);
+    box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.2);
   }
 
   &::before {
@@ -106,7 +105,7 @@ const StyledReactPlayer = styled(ReactPlayer)`
 `;
 
 const NoVideosMessage = styled.p`
-  color: #ffffff;
+  color: #000000;
   font-size: 18px;
   text-align: center;
   margin-top: 50px;
@@ -195,21 +194,14 @@ const ManagerDashboard = () => {
 
   return (
     <DashboardContainer>
-      <Navbar>
-        <h2>Manager Dashboard, Welcome {username}</h2>
+      {/* <Navbar>
+        <h2>Manager Dashboard</h2>
         <ul>
-          <li>
-            <a href="/dashboard">Home</a>
-          </li>
-          <li>
-            <a href="/settings">Settings</a>
-          </li>
-          <li>
-            <a href="/logout">Logout</a>
-          </li>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Settings</a></li>
         </ul>
-      </Navbar>
-      <WelcomeMessage></WelcomeMessage>
+      </Navbar> */}
+     
       {videoUrls.length > 0 ? (
         <>
           <VideoGrid>

@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import CreateManager from "./supermanagerutils/CreateManager";
+
 const App = () => {
   const navigateToAnalytics = () => {
     window.location.href = "/analytics";
@@ -18,6 +19,10 @@ const App = () => {
     window.location.href = "/videos";
   };
 
+  const handleLogout = () => {
+    window.location.href = "/";
+  };
+
   return (
     <div>
       <Navbar>
@@ -27,6 +32,7 @@ const App = () => {
           <NavLink href="#services">Logs</NavLink>
           <NavLink href="#contact">Live Feeds</NavLink>
         </NavLinks>
+        <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
       </Navbar>
       <Page id="home">
         <Wrapper>
@@ -35,13 +41,9 @@ const App = () => {
             <Button onClick={navigateToAnalytics}>Analytics</Button>
           </ImageWrapper>
         </Wrapper>
-       
       </Page>
       <Page id="about">
-        
-          <CreateManager/>
-        
-       
+        <CreateManager />
       </Page>
       <Page id="services">
         <Wrapper>
@@ -50,7 +52,6 @@ const App = () => {
             <Button onClick={navigateToExploreServices}>Get Logs</Button>
           </ImageWrapper>
         </Wrapper>
-        
       </Page>
       <Page id="contact">
         <Wrapper>
@@ -59,8 +60,10 @@ const App = () => {
             <Button onClick={navigateToContactUs}>Live Feeds</Button>
           </ImageWrapper>
         </Wrapper>
-        
       </Page>
+      <Footer>
+        <FooterText>© 2024 Your Company Name. All rights reserved.</FooterText>
+      </Footer>
     </div>
   );
 };
@@ -69,33 +72,51 @@ const App = () => {
 const Navbar = styled.nav`
   position: sticky;
   top: 0;
-  background: white;
+  background: #120428;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   padding: 15px 5%;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
   z-index: 1000;
 `;
 
 const NavLinks = styled.div`
   display: flex;
-  justify-content: flex-end;
-  width: 65%; /* Leave 35% space on the left */
+  justify-content: flex-start;
+  width: 65%;
 `;
 
 const NavLink = styled.a`
   text-decoration: none;
   font-size: 1.2rem;
   font-weight: bold;
-  color: #ff6e89;
+  color: #9f24c2;
   padding: 10px 20px;
   border-radius: 5px;
   transition: all 0.3s ease;
 
   &:hover {
-    background: #ff6e89;
+    background: #9f24c2;
     color: white;
+  }
+`;
+
+const LogoutButton = styled.button`
+  background: #9f24c2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: white;
+    color: #9f24c2;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
   }
 `;
 
@@ -108,13 +129,13 @@ const Page = styled.section`
   text-align: center;
   background: ${(props) =>
     props.id === "home"
-      ? "linear-gradient(180deg, #ff6e89, #9aefff)"
+      ? "linear-gradient(180deg, #9f24c2, #120428)"
       : props.id === "about"
-      ? "linear-gradient(180deg, #9aefff, #ffffff)"
+      ? "linear-gradient(180deg, #120428, #9f24c2)"
       : props.id === "services"
-      ? "linear-gradient(180deg, #ffffff, #ff6e89)"
-      : "linear-gradient(180deg, #ff6e89, #ffffff)"};
-  color: #333;
+      ? "linear-gradient(180deg, #9f24c2, #120428)"
+      : "linear-gradient(180deg, #120428, #9f24c2)"};
+  color: #fff;
   padding: 20px;
 
   h1 {
@@ -131,7 +152,7 @@ const Page = styled.section`
 
 const Wrapper = styled.div`
   position: relative;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   padding: 0;
   max-width: 600px;
@@ -139,7 +160,7 @@ const Wrapper = styled.div`
   width: 100%;
   height: auto;
   text-align: center;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
   overflow: hidden;
 `;
 
@@ -161,7 +182,7 @@ const Button = styled.button`
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(90deg, #ff6e89, #9aefff);
+  background: linear-gradient(90deg, #9f24c2, #120428);
   color: white;
   border: none;
   border-radius: 5px;
@@ -173,9 +194,23 @@ const Button = styled.button`
 
   &:hover {
     background: white;
-    color: #ff6e89;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    color: #9f24c2;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
   }
+`;
+
+const Footer = styled.footer`
+  background: #120428;
+  color: #fff;
+  text-align: center;
+  padding: 20px 0;
+  margin-top: auto;
+  box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.3);
+`;
+
+const FooterText = styled.p`
+  font-size: 1rem;
+  margin: 0;
 `;
 
 export default App;

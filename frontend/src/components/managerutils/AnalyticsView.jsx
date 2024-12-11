@@ -7,12 +7,36 @@ import FunnelChart from "../adminutils/Funnel";
 import { IoMdAnalytics } from "react-icons/io";
 import { IoMdArrowBack } from "react-icons/io";
 
-// CSS for AnalyticsView
+// // CSS for AnalyticsView
+// const DashboardContainer = styled.div`
+//   width: 100%;
+//   height: 100%;
+//   overflow-x: hidden; // Prevent horizontal overflow
+// `;
+
 const DashboardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
-  overflow-x: hidden; // Prevent horizontal overflow
+  overflow: hidden; /* Prevent horizontal overflow */
+  padding: 0; /* Remove any unnecessary padding */
+  box-sizing: border-box;
 `;
+
+const CardsSlider = styled.div`
+  display: flex;
+  
+  gap: 20px;
+  padding: 20px;
+  overflow-x: auto; /* Allow horizontal scrolling for cards */
+  scroll-behavior: smooth;
+  width: 100%;
+  box-sizing: border-box; /* Prevent width-related issues */
+`;
+
+
+
 
 const Title = styled.div`
   display: flex;
@@ -50,13 +74,13 @@ const BackButton = styled.button`
   }
 `;
 
-const CardsSlider = styled.div`
-  display: flex;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  gap: 20px;
-  padding: 20px;
-`;
+// const CardsSlider = styled.div`
+//   display: flex;
+//   overflow-x: auto;
+//   scroll-behavior: smooth;
+//   gap: 20px;
+//   padding: 20px;
+// `;
 
 const Card = styled.div`
   min-width: 300px;
@@ -90,9 +114,9 @@ const AnalyticsView = () => {
 
   return (
     <DashboardContainer>
-      <BackButton onClick={goBack}>
+      {/* <BackButton onClick={goBack}>
         <IoMdArrowBack size={20} /> Back
-      </BackButton>
+      </BackButton> */}
       <Title>
         <IoMdAnalytics size={50} style={{ marginRight: "10px" }} /> Analytics
       </Title>

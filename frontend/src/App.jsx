@@ -11,6 +11,7 @@ import SuperManager from "./components/SuperManager"
 import SuperManagerVideoPage from "./components/supermanagerutils/SuperManagerVideoPage"
 import AnalyticsView from "./components/supermanagerutils/AnalyticsView";
 import Logs from "./components/supermanagerutils/Logs";
+import Dashboard from "./components/managerutils/Dashboard";
 function App() {
   return (
     <AuthProvider>
@@ -20,7 +21,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/admin" element={<AdminPanel />} />
           <Route path="/supermanager" element={<SuperManager />} />
-          <Route path="/manager" element={<ManagerDashboard />} />
+          <Route path="/manager" element={<Dashboard />} />
           <Route path="/videos" element={<SuperManagerVideoPage />} />
           <Route path="/analytics" element={<AnalyticsView />} />
           <Route path="/logs" element={<Logs />} />

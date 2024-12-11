@@ -15,80 +15,102 @@ const generateRandomData = () => {
 };
 
 // Styled Components
-const Container = styled.div`
-  width: 100%;
-  max-width: 600px;
-  margin: 50px auto;
-  padding: 10px;
-  background: linear-gradient(135deg, #ff97aa, #bef4ff);
-  border-radius: 10px;
+const PageContainer = styled.div`
+  padding: 20px;
   font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #120428, #9f24c2);
+  color: #ffffff;
+  min-height: 100vh;
+`;
+
+const BackButton = styled.button`
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #ffffff;
+  color: #9f24c2;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #9f24c2;
+    color: #ffffff;
+  }
+`;
+
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+`;
+
+const LogCard = styled.div`
+  background: #1e0632;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 const VideoWrapper = styled.div`
   width: 100%;
-  height: 250px;
-  background-color: #333;
-  border-radius: 10px;
-  position: relative;
+  height: 200px;
+  background-color: #000;
 `;
 
 const VideoElement = styled.video`
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 10px;
 `;
 
 const InfoSection = styled.div`
   padding: 20px;
-  background-color: #fff;
-  border-radius: 10px;
-  margin-top: -20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
 const Header = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
 `;
 
 const VideoIcon = styled.div`
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background-color: #fff;
+  background-color: #ffffff;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 18px;
   font-weight: bold;
-  color: #ff97aa;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  color: #9f24c2;
+  margin-right: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 `;
 
 const Title = styled.h3`
   font-size: 18px;
+  color: #ffffff;
   font-weight: bold;
-  color: #333;
-`;
-
-const Info = styled.div`
-  margin-bottom: 10px;
 `;
 
 const InfoText = styled.p`
   font-size: 14px;
+  color: #d4c0e5;
   margin: 5px 0;
-  color: #444;
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  padding: 20px;
+  background-color: #2c0a40;
 `;
 
 const Button = styled.button`
@@ -97,9 +119,9 @@ const Button = styled.button`
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  background-color: ${(props) => props.bgColor || "#ff97aa"};
-  color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: ${(props) => props.bgColor || "#9f24c2"};
+  color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
 
   &:hover {
@@ -108,46 +130,41 @@ const Button = styled.button`
 `;
 
 const Logs = () => {
-  // Array of locations for rendering the logs for each location
   const locationsData = ["Store A", "Store B", "Store C"];
-  
+
   return (
-    <div>
-      {locationsData.map((location, index) => {
-        const { randomId, manager, superManager } = generateRandomData();
+    <PageContainer>
+      <BackButton onClick={() => window.history.back()}>Back</BackButton>
+      <GridContainer>
+        {locationsData.map((location, index) => {
+          const { randomId, manager, superManager } = generateRandomData();
 
-        return (
-          <Container key={index}>
-            <VideoWrapper>
-              {/* Replace the src with your actual video source */}
-              <VideoElement controls>
-                <source src="a.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-              </VideoElement>
-            </VideoWrapper>
-
-            <InfoSection>
-              <Header>
-                <VideoIcon>🎥</VideoIcon>
-                <Title>Shoplifting Detection Log - {location}</Title>
-              </Header>
-
-              <Info>
+          return (
+            <LogCard key={index}>
+              <VideoWrapper>
+                <VideoElement controls>
+                  <source src="a.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </VideoElement>
+              </VideoWrapper>
+              <InfoSection>
+                <Header>
+                  <VideoIcon>🎥</VideoIcon>
+                  <Title>{location} - Detection Log</Title>
+                </Header>
                 <InfoText><strong>Detection ID:</strong> {randomId}</InfoText>
-                <InfoText><strong>Location:</strong> {location}</InfoText>
                 <InfoText><strong>Manager:</strong> {manager}</InfoText>
                 <InfoText><strong>Super Manager:</strong> {superManager}</InfoText>
-              </Info>
-
+              </InfoSection>
               <ButtonContainer>
-                <Button bgColor="#ff97aa">Print</Button>
-                <Button bgColor="#bef4ff">Forward</Button>
+                <Button bgColor="#9f24c2">Print</Button>
+                <Button bgColor="#120428">Forward</Button>
               </ButtonContainer>
-            </InfoSection>
-          </Container>
-        );
-      })}
-    </div>
+            </LogCard>
+          );
+        })}
+      </GridContainer>
+    </PageContainer>
   );
 };
 

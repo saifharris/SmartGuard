@@ -6,20 +6,20 @@ from flask_bcrypt import Bcrypt
 import os
 from bson.objectid import ObjectId
 from datetime import datetime
-# import threading
-# import logging
-# from recognizeOffender import recognize_from_image
-# import subprocess
-# import time
-# from pathlib import Path
+import threading
+import logging
+from recognizeOffender import recognize_from_image
+import subprocess
+import time
+from pathlib import Path
 
-# # Import your configuration and tracker classes
-# from config import TrackingConfig
-# from multicamtracker import MultiCameraTracker
+# Import your configuration and tracker classes
+from config import TrackingConfig
+from multicamtracker import MultiCameraTracker
 
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "*"}})  # Allow all origins (replace '*' with 'http://localhost:5173' for frontend)
+CORS(app)  # Allow all origins (replace '*' with 'http://localhost:5173' for frontend)
 bcrypt = Bcrypt(app)
 
 # MongoDB configuration
@@ -36,286 +36,288 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 admin_credentials = {"username": "admin", "password": "admin123"}
 
 
-# # Logging setup
-# logging.basicConfig(level=logging.INFO)
-# logger = logging.getLogger("MultiCamAPI")
+# Logging setup
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("MultiCamAPI")
 
 
 
 
 
-# # Global tracker and worker references
-# tracker = None
-# worker_thread = None
-# processing_done = False
+# Global tracker and worker references
+tracker = None
+worker_thread = None
+processing_done = False
 
-# def run_tracker(video1_path, video2_path, output_path, conf, iou_thresh, cos_thresh):
-#     global processing_done, tracker
+def run_tracker(video1_path, video2_path, output_path, conf, iou_thresh, cos_thresh):
+    global processing_done, tracker
 
-#     if not os.path.exists(video1_path):
-#         logger.error(f"video1_path not found: {video1_path}")
-#         processing_done = True
-#         return
+    if not os.path.exists(video1_path):
+        logger.error(f"video1_path not found: {video1_path}")
+        processing_done = True
+        return
 
-#     if not os.path.exists(video2_path):
-#         logger.error(f"video2_path not found: {video2_path}")
-#         processing_done = True
-#         return
+    if not os.path.exists(video2_path):
+        logger.error(f"video2_path not found: {video2_path}")
+        processing_done = True
+        return
 
-#     try:
-#         config = TrackingConfig(
-#             conf_threshold=conf,
-#             iou_threshold=iou_thresh,
-#             cos_threshold=cos_thresh
-#         )
-#     except Exception as e:
-#         logger.error(f"Failed to create TrackingConfig: {e}")
-#         processing_done = True
-#         return
+    try:
+        config = TrackingConfig(
+            conf_threshold=conf,
+            iou_threshold=iou_thresh,
+            cos_threshold=cos_thresh
+        )
+    except Exception as e:
+        logger.error(f"Failed to create TrackingConfig: {e}")
+        processing_done = True
+        return
 
-#     try:
-#         tracker_local = MultiCameraTracker(config)
-#     except Exception as e:
-#         logger.error(f"Failed to initialize MultiCameraTracker: {e}")
-#         processing_done = True
-#         return
+    try:
+        tracker_local = MultiCameraTracker(config)
+    except Exception as e:
+        logger.error(f"Failed to initialize MultiCameraTracker: {e}")
+        processing_done = True
+        return
 
-#     try:
-#         tracker_local.process_videos(video1_path, video2_path, output_path)
-#         # Assign to global tracker after successful run
-#         global tracker
-#         tracker = tracker_local
-#         processing_done = True
-#     except Exception as e:
-#         logger.error(f"Error during tracking: {e}")
-#         processing_done = True
-
-
-# #############################################
-# #              Tracking Routes (Flask)
-# #############################################
-
-# @app.route("/api/start_tracking", methods=["POST"])
-# def start_tracking():
-#     global worker_thread, processing_done, tracker
-
-#     data = request.get_json()
-#     if not data:
-#         return jsonify({"error": "Invalid request body"}), 400
-
-#     video1 = data.get("video1")
-#     video2 = data.get("video2")
-#     output = data.get("output", None)
-#     conf = data.get("conf", 0.3)
-#     iou_thresh = data.get("iou_thresh", 0.3)
-#     cos_thresh = data.get("cos_thresh", 0.8)
-
-#     if not video1 or not os.path.exists(video1):
-#         return jsonify({"error": "video1 does not exist."}), 400
-#     if not video2 or not os.path.exists(video2):
-#         return jsonify({"error": "video2 does not exist."}), 400
-
-#     if worker_thread and worker_thread.is_alive():
-#         return jsonify({"error": "Tracking is already in progress."}), 400
-
-#     processing_done = False
-#     tracker = None
-
-#     worker_thread = threading.Thread(
-#         target=run_tracker,
-#         args=(video1, video2, output, conf, iou_thresh, cos_thresh),
-#         daemon=True
-#     )
-#     worker_thread.start()
-
-#     return jsonify({"message": "Tracking started"}), 200
-
-# @app.route("/api/status", methods=["GET"])
-# def status():
-#     global worker_thread, processing_done, tracker
-#     if worker_thread is None:
-#         return jsonify({"status": "not started"}), 200
-#     elif worker_thread.is_alive():
-#         return jsonify({"status": "processing"}), 200
-#     else:
-#         if tracker:
-#             return jsonify({"status": "done", "total_visits": tracker.total_visit_count}), 200
-#         else:
-#             return jsonify({"status": "failed", "message": "Tracker did not complete successfully"}), 200
+    try:
+        tracker_local.process_videos(video1_path, video2_path, output_path)
+        # Assign to global tracker after successful run
+        global tracker
+        tracker = tracker_local
+        processing_done = True
+    except Exception as e:
+        logger.error(f"Error during tracking: {e}")
+        processing_done = True
 
 
+#############################################
+#              Tracking Routes (Flask)
+#############################################
 
-# #############################################
-# #              searchByImage(Flask)
-# #############################################
+@app.route("/api/start_tracking", methods=["POST"])
+def start_tracking():
+    global worker_thread, processing_done, tracker
 
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Invalid request body"}), 400
 
-# UPLOAD_DIR = Path("uploads")
-# UPLOAD_DIR.mkdir(exist_ok=True)
-# UPLOAD_FOLDER = 'searchPerson'
-# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-# os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+    video1 = data.get("video1")
+    video2 = data.get("video2")
+    output = data.get("output", None)
+    conf = data.get("conf", 0.3)
+    iou_thresh = data.get("iou_thresh", 0.3)
+    cos_thresh = data.get("cos_thresh", 0.8)
+
+    if not video1 or not os.path.exists(video1):
+        return jsonify({"error": "video1 does not exist."}), 400
+    if not video2 or not os.path.exists(video2):
+        return jsonify({"error": "video2 does not exist."}), 400
+
+    if worker_thread and worker_thread.is_alive():
+        return jsonify({"error": "Tracking is already in progress."}), 400
+
+    processing_done = False
+    tracker = None
+
+    worker_thread = threading.Thread(
+        target=run_tracker,
+        args=(video1, video2, output, conf, iou_thresh, cos_thresh),
+        daemon=True
+    )
+    worker_thread.start()
+
+    return jsonify({"message": "Tracking started"}), 200
+
+@app.route("/api/status", methods=["GET"])
+def status():
+    global worker_thread, processing_done, tracker
+    if worker_thread is None:
+        return jsonify({"status": "not started"}), 200
+    elif worker_thread.is_alive():
+        return jsonify({"status": "processing"}), 200
+    else:
+        if tracker:
+            return jsonify({"status": "done", "total_visits": tracker.total_visit_count}), 200
+        else:
+            return jsonify({"status": "failed", "message": "Tracker did not complete successfully"}), 200
 
 
 
-# UPLOAD_FOLDER2 = os.path.join(os.getcwd(), 'uploads')
-# app.config['UPLOAD_FOLDER2'] = UPLOAD_FOLDER2
-# os.makedirs(UPLOAD_FOLDER2, exist_ok=True)
+#############################################
+#              searchByImage(Flask)
+#############################################
 
 
-# @app.route("/upload", methods=["POST"])
-# def upload_images():
-#     # Validate person_name
-#     person_name = request.form.get("person_name")
-#     if not person_name:
-#         return jsonify({"detail": "Person name not provided."}), 400
-
-#     # Check that exactly 3 images are uploaded
-#     if "images" not in request.files:
-#         return jsonify({"detail": "Please upload exactly 3 images."}), 400
-
-#     images = request.files.getlist("images")
-#     if len(images) != 3:
-#         return jsonify({"detail": "Please upload exactly 3 images."}), 400
-
-#     image_paths = []
-#     for img in images:
-#         # Generate a unique filename by using the current timestamp and the original filename
-#         timestamp = int(time.time() * 1000)  # current time in milliseconds
-#         out_filename = f"{timestamp}-{secure_filename(img.filename)}"
-#         out_path = UPLOAD_DIR / out_filename
-
-#         # Save the uploaded file to the uploads directory
-#         img.save(out_path)
-#         image_paths.append(str(out_path.resolve()))
-
-#     # Ensure the dataset directory exists
-#     dataset_dir = Path("dataset_and_files") / "dataset" / person_name
-#     dataset_dir.mkdir(parents=True, exist_ok=True)
-
-#     # MongoDB details
-#     db_uri = "mongodb+srv://harrissaif01:harris999@cluster0.i5ngqeq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-#     db_name = "SmartGuard"
-#     collection_name = "knownOffenders"
-#     upload_folder = "uploads"
-
-#     # 0. Run storeOffender.py
-#     saveOffenderCommand = [
-#         "python",
-#         "storeOffender.py",
-#         "--db_uri", db_uri,
-#         "--db_name", db_name,
-#         "--collection_name", collection_name,
-#         "--person_name", person_name,
-#         "--image_left", image_paths[0],
-#         "--image_right", image_paths[1],
-#         "--image_frontal", image_paths[2],
-#         "--upload_folder", upload_folder
-#     ]
-
-#     result = subprocess.run(saveOffenderCommand, capture_output=True, text=True)
-#     if result.returncode != 0:
-#         print("[ERROR] Running storeOffender.py:", result.stderr)
-#         return jsonify({"detail": "Error saving offender details to MongoDB."}), 500
-
-#     print("[INFO] Offender details saved successfully.")
-
-#     # 1. Run augmentation.py
-#     augmentationCommand = [
-#         "python",
-#         "augmentation.py",
-#         "--person_name", person_name,
-#         "--images", *image_paths,
-#         "--output_dir", str(dataset_dir.resolve())
-#     ]
-
-#     result = subprocess.run(augmentationCommand, capture_output=True, text=True)
-#     if result.returncode != 0:
-#         print("[ERROR] Running augmentation.py:", result.stderr)
-#         return jsonify({"detail": "Error during augmentation."}), 500
-
-#     print("[INFO] Dataset augmentation complete. Starting training...")
-
-#     # 2. Run train.py
-#     trainCommand = ["python", "train.py"]
-#     result = subprocess.run(trainCommand, capture_output=True, text=True)
-#     if result.returncode != 0:
-#         print("[ERROR] Running train.py:", result.stderr)
-#         return jsonify({"detail": "Error during training."}), 500
-
-#     print("[INFO] Training complete. Starting main.py for real-time recognition...")
-
-#     # 3. Run main.py
-#     mainCommand = ["python", "main2.py"]
-#     result = subprocess.run(mainCommand, capture_output=True, text=True)
-#     if result.returncode != 0:
-#         print("[ERROR] Running main.py:", result.stderr)
-#         return jsonify({"detail": "Error starting real-time recognition."}), 500
-
-#     return jsonify({
-#         "message": "Offender saved to MongoDB, augmentation, training, and real-time recognition completed."
-#     })
+UPLOAD_DIR = Path("uploads")
+UPLOAD_DIR.mkdir(exist_ok=True)
+UPLOAD_FOLDER = 'searchPerson'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
-# @app.route("/run-main", methods=["GET"])
-# def run_main():
-#     print("[INFO] Starting main2.py")
-#     mainCommand = ["python", "main2.py"]
-#     result = subprocess.run(mainCommand, capture_output=True, text=True)
-#     if result.returncode != 0:
-#         print("[ERROR] Running main2.py:", result.stderr)
-#         return jsonify({"detail": "Error running main.py"}), 500
 
-#     return jsonify({
-#         "message": "main2.py executed successfully!",
-#         "output": result.stdout,
-#     })
+UPLOAD_FOLDER2 = os.path.join(os.getcwd(), 'uploads')
+app.config['UPLOAD_FOLDER2'] = UPLOAD_FOLDER2
+os.makedirs(UPLOAD_FOLDER2, exist_ok=True)
 
-# @app.route('/upload-image', methods=['POST'])
-# def upload_image():
-#     if 'image' not in request.files:
-#         return jsonify({'error': 'No file uploaded'}), 400
 
-#     file = request.files['image']
-#     if file.filename == '':
-#         return jsonify({'error': 'No file selected'}), 400
+@app.route("/upload", methods=["POST"])
+def upload_images():
+    # Validate person_name
+    person_name = request.form.get("person_name")
+    if not person_name:
+        return jsonify({"detail": "Person name not provided."}), 400
 
-#     # Save the uploaded image
-#     filename = secure_filename(file.filename)
-#     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-#     file.save(file_path)
+    # Check that exactly 3 images are uploaded
+    if "images" not in request.files:
+        return jsonify({"detail": "Please upload exactly 3 images."}), 400
 
-#     try:
-#         result = recognize_from_image(file_path)
-#         if result:
-#             if result.get('name') and result.get('date') and result.get('images'):
-#                 # Replace backslashes with forward slashes for web compatibility
-#                 for key in result['images']:
-#                     if result['images'][key]:
-#                         result['images'][key] = request.host_url.strip('/') + result['images'][key].replace('\\', '/')
+    images = request.files.getlist("images")
+    if len(images) != 3:
+        return jsonify({"detail": "Please upload exactly 3 images."}), 400
 
-#                 print(f"Recognized Offender: {result['images']}")
+    image_paths = []
+    for img in images:
+        # Generate a unique filename by using the current timestamp and the original filename
+        timestamp = int(time.time() * 1000)  # current time in milliseconds
+        out_filename = f"{timestamp}-{secure_filename(img.filename)}"
+        out_path = UPLOAD_DIR / out_filename
 
-#                 return jsonify(result)
-#             else:
-#                 return jsonify({
-#                     'status': 'success',
-#                     'message': 'Offender recognized but data is incomplete.'
-#                 })
-#         else:
-#             return jsonify({
-#                 'status': 'success',
-#                 'message': 'No offender recognized'
-#             })
-#     except Exception as e:
-#         print(f"Error occurred: {e}")
-#         return jsonify({'error': str(e)}), 500
-#     finally:
-#         os.remove(file_path)
+        # Save the uploaded file to the uploads directory
+        img.save(out_path)
+        image_paths.append(str(out_path.resolve()))
 
-# @app.route('/uploads/<filename>')
-# def uploaded_file(filename):
-#     return send_from_directory(app.config['UPLOAD_FOLDER2'], filename)
+    # Ensure the dataset directory exists
+    dataset_dir = Path("dataset_and_files") / "dataset" / person_name
+    dataset_dir.mkdir(parents=True, exist_ok=True)
+
+    # MongoDB details
+    db_uri = "mongodb+srv://i211176:36775@cluster0.vjz8j.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    db_name = "SmartGuard"
+    collection_name = "knownOffenders"
+    upload_folder = "uploads"
+
+    # 0. Run storeOffender.py
+    saveOffenderCommand = [
+        "python",
+        "storeOffender.py",
+        "--db_uri", db_uri,
+        "--db_name", db_name,
+        "--collection_name", collection_name,
+        "--person_name", person_name,
+        "--image_left", image_paths[0],
+        "--image_right", image_paths[1],
+        "--image_frontal", image_paths[2],
+        "--upload_folder", upload_folder
+    ]
+
+    result = subprocess.run(saveOffenderCommand, capture_output=True, text=True)
+    if result.returncode != 0:
+        print("[ERROR] Running storeOffender.py:", result.stderr)
+        return jsonify({"detail": "Error saving offender details to MongoDB."}), 500
+
+    print("[INFO] Offender details saved successfully.")
+
+    # 1. Run augmentation.py
+    augmentationCommand = [
+        "python",
+        "augmentation.py",
+        "--person_name", person_name,
+        "--images", *image_paths,
+        "--output_dir", str(dataset_dir.resolve())
+    ]
+
+    result = subprocess.run(augmentationCommand, capture_output=True, text=True)
+    if result.returncode != 0:
+        print("[ERROR] Running augmentation.py:", result.stderr)
+        return jsonify({"detail": "Error during augmentation."}), 500
+
+    print("[INFO] Dataset augmentation complete. Starting training...")
+
+    # 2. Run train.py
+    trainCommand = ["python", "train.py"]
+    result = subprocess.run(trainCommand, capture_output=True, text=True)
+    if result.returncode != 0:
+        print("[ERROR] Running train.py:", result.stderr)
+        return jsonify({"detail": "Error during training."}), 500
+
+    print("[INFO] Training complete. Starting main.py for real-time recognition...")
+
+    # 3. Run main.py
+    mainCommand = ["python", "main2.py"]
+    result = subprocess.run(mainCommand, capture_output=True, text=True)
+    if result.returncode != 0:
+        print("[ERROR] Running main.py:", result.stderr)
+        return jsonify({"detail": "Error starting real-time recognition."}), 500
+
+    return jsonify({
+        "message": "Offender saved to MongoDB, augmentation, training, and real-time recognition completed."
+    })
+
+
+@app.route("/run-main", methods=["GET"])
+def run_main():
+    print("[INFO] Starting main2.py")
+    mainCommand = ["python", "main2.py"]
+    result = subprocess.run(mainCommand, capture_output=True, text=True)
+    if result.returncode != 0:
+        print("[ERROR] Running main2.py:", result.stderr)
+        return jsonify({"detail": "Error running main.py"}), 500
+
+    return jsonify({
+        "message": "main2.py executed successfully!",
+        "output": result.stdout,
+    })
+
+
+
+@app.route('/upload-image', methods=['POST'])
+def upload_image():
+    if 'image' not in request.files:
+        return jsonify({'error': 'No file uploaded'}), 400
+
+    file = request.files['image']
+    if file.filename == '':
+        return jsonify({'error': 'No file selected'}), 400
+
+    # Save the uploaded image
+    filename = secure_filename(file.filename)
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file.save(file_path)
+
+    try:
+        result = recognize_from_image(file_path)
+        if result:
+            if result.get('name') and result.get('date') and result.get('images'):
+                # Replace backslashes with forward slashes for web compatibility
+                for key in result['images']:
+                    if result['images'][key]:
+                        result['images'][key] = request.host_url.strip('/') + result['images'][key].replace('\\', '/')
+
+                print(f"Recognized Offender: {result['images']}")
+
+                return jsonify(result)
+            else:
+                return jsonify({
+                    'status': 'success',
+                    'message': 'Offender recognized but data is incomplete.'
+                })
+        else:
+            return jsonify({
+                'status': 'success',
+                'message': 'No offender recognized'
+            })
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return jsonify({'error': str(e)}), 500
+    finally:
+        os.remove(file_path)
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER2'], filename)
 
 
 
@@ -445,7 +447,7 @@ def create_manager():
         video_urls = []
         for video in videos:
             filename = secure_filename(video.filename)
-            video_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            video_path = os.path.join(app.config['UPLOAD_FOLDER2'], filename)
             video.save(video_path)
             video_urls.append(f"/uploads/{filename}")
 

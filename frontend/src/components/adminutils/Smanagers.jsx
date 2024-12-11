@@ -3,22 +3,88 @@ import styled from "styled-components";
 import axios from "axios";
 
 // Styled components
-const GradientBoxForEmails = styled.div`
-  background: linear-gradient(145deg, #ff5f7e, #ffe1e6);
-  border-radius: 20px;
-  padding: 20px;
-  width: 500px;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+const Container = styled.div`
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto; 
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 1.5rem;
   font-family: Arial, sans-serif;
 `;
 
-const HeadingForEmails = styled.h2`
-  color: #333;
-  font-size: 20px;
+const HeaderContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+`;
+
+const IconWrapper = styled.div`
+  width: 120px;
+  height: 120px;
+  margin-bottom: 1rem;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+
+const PageTitle = styled.h2`
+  font-size: 2.2rem;
+  color: #1a1a2e;
   margin: 0;
+`;
+
+const CardWrapper = styled.div`
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+  position: relative;
+`;
+
+const AccentBar = styled.div`
+  content: "";
+  display: block;
+  width: 60px;
+  height: 5px;
+  background: #9f24c2;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+`;
+
+const CardHeading = styled.h3`
+  color: #1a1a2e;
+  font-size: 1.5rem;
+  margin: 0 0 1rem 0;
+  font-weight: bold;
+`;
+
+const EmptyMessage = styled.p`
+  font-size: 1rem;
+  color: #999;
+  text-align: center;
+  margin: 2rem 0;
+`;
+
+const ManagerRow = styled.div`
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.05);
+  margin-bottom: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.1);
+  }
 `;
 
 const ProfileRowContainer = styled.div`
@@ -34,75 +100,69 @@ const CircularAvatar = styled.div`
   background: url("super.png") no-repeat center center;
   background-size: cover;
   flex-shrink: 0;
+  border: 2px solid #9f24c2;
 `;
 
 const ProfileDetailsContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 5px;
-  flex: 1;
 `;
 
-const UserNameForEmails = styled.h3`
-  color: #333;
-  font-size: 18px;
+const UserNameForEmails = styled.h4`
+  color: #1a1a2e;
+  font-size: 1rem;
   margin: 0;
+  font-weight: bold;
 `;
 
 const UserRoleForEmails = styled.span`
-  font-size: 14px;
+  font-size: 0.9rem;
   color: #666;
 `;
 
 const DateAndTimeContainer = styled.div`
-  font-size: 14px;
+  font-size: 0.9rem;
   color: #999;
   display: flex;
   flex-direction: column;
   text-align: right;
 `;
 
-const SingleEmailRow = styled.div`
-  background: white;
-  border-radius: 10px;
-  padding: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-`;
-
 const Smanagers = () => {
-    const [supermanagers, setSupermanagers] = useState([]);
-  
-    useEffect(() => {
-      const fetchSupermanagers = async () => {
-        try {
-          const res = await axios.get("http://localhost:5000/api/auth/supermanagers");
-          setSupermanagers(res.data); // Set the fetched supermanagers
-        } catch (error) {
-          console.error("Error fetching supermanagers:", error);
-          alert("Failed to fetch supermanagers. Please try again.");
-        }
-      };
-  
-      fetchSupermanagers();
-    }, []);
-  
-    return (
-        <><span>
-        <img src="/super.png" alt="" style={{ width: "120px", height: "120px" }} />
-      </span>
-      <span style={{ fontWeight: 900, fontSize: "36px", color: "#232b2b" }}>
-        Supermanagers
-      </span>
-      <GradientBoxForEmails>
-        <HeadingForEmails>Supermanagers</HeadingForEmails>
+  const [supermanagers, setSupermanagers] = useState([]);
+
+  useEffect(() => {
+    const fetchSupermanagers = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/auth/supermanagers");
+        setSupermanagers(res.data);
+      } catch (error) {
+        console.error("Error fetching supermanagers:", error);
+        alert("Failed to fetch supermanagers. Please try again.");
+      }
+    };
+
+    fetchSupermanagers();
+  }, []);
+
+  return (
+    <Container>
+      <HeaderContainer>
+        <IconWrapper>
+          <img src="/super.png" alt="Super Manager Icon" />
+        </IconWrapper>
+        <PageTitle>Supermanagers</PageTitle>
+      </HeaderContainer>
+
+      <CardWrapper>
+        <AccentBar />
+        <CardHeading>Supermanagers List</CardHeading>
         {supermanagers.length === 0 ? (
-          <p>No supermanagers found.</p>
+          <EmptyMessage>No supermanagers found.</EmptyMessage>
         ) : (
           supermanagers.map((sm) => (
-            <SingleEmailRow key={sm._id}>
+            <ManagerRow key={sm._id}>
               <ProfileRowContainer>
                 <CircularAvatar />
                 <ProfileDetailsContainer>
@@ -111,17 +171,14 @@ const Smanagers = () => {
                 </ProfileDetailsContainer>
               </ProfileRowContainer>
               <DateAndTimeContainer>
-              <span>{sm.created_at || "Unknown Date"}</span>
+                <span>{sm.created_at || "Unknown Date"}</span>
               </DateAndTimeContainer>
-            </SingleEmailRow>
+            </ManagerRow>
           ))
         )}
-      </GradientBoxForEmails>
-      
-      </>
-      
-    );
-  };
-  
-  export default Smanagers;
-  
+      </CardWrapper>
+    </Container>
+  );
+};
+
+export default Smanagers;

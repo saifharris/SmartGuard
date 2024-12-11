@@ -1,25 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 
-// Random data generator
-const generateRandomData = () => {
-  const locations = ["Store A", "Store B", "Store C"];
-  const managers = ["John Doe", "Jane Smith", "Sara Lee"];
-  const superManagers = ["Michael Knight", "Ella Moore", "David King"];
-  const randomId = Math.floor(Math.random() * 1000);
-  const location = locations[Math.floor(Math.random() * locations.length)];
-  const manager = managers[Math.floor(Math.random() * managers.length)];
-  const superManager = superManagers[Math.floor(Math.random() * superManagers.length)];
-
-  return { randomId, location, manager, superManager };
-};
-
-// Styled Components
-const PageContainer = styled.div`
+const LogsPageContainer = styled.div`
   padding: 20px;
-  font-family: 'Arial', sans-serif;
-  background: linear-gradient(135deg, #120428, #9f24c2);
-  color: #ffffff;
+  font-family: "Arial", sans-serif;
+  background: linear-gradient(145deg, #f5f5f5, #f0f0f0);
+  color: #1a1a2e;
   min-height: 100vh;
 `;
 
@@ -29,32 +15,30 @@ const BackButton = styled.button`
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  background-color: #ffffff;
-  color: #9f24c2;
+  background-color: #9f24c2;
+  color: #ffffff;
   margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: #9f24c2;
-    color: #ffffff;
+    background-color: #b561d2;
   }
 `;
 
-const GridContainer = styled.div`
+const LogsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
 `;
 
 const LogCard = styled.div`
-  background: #1e0632;
+  background: linear-gradient(145deg, #ffffff, #f0f0f0);
   border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 `;
 
 const VideoWrapper = styled.div`
@@ -83,26 +67,26 @@ const VideoIcon = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #ffffff;
+  background-color: #9f24c2;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 18px;
   font-weight: bold;
-  color: #9f24c2;
+  color: #ffffff;
   margin-right: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 `;
 
 const Title = styled.h3`
   font-size: 18px;
-  color: #ffffff;
+  color: #1a1a2e;
   font-weight: bold;
 `;
 
 const InfoText = styled.p`
   font-size: 14px;
-  color: #d4c0e5;
+  color: #555555;
   margin: 5px 0;
 `;
 
@@ -110,7 +94,7 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 20px;
-  background-color: #2c0a40;
+  background-color: #f5f5f5;
 `;
 
 const Button = styled.button`
@@ -121,11 +105,11 @@ const Button = styled.button`
   cursor: pointer;
   background-color: ${(props) => props.bgColor || "#9f24c2"};
   color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 
   &:hover {
-    opacity: 0.9;
+    background-color: ${(props) => props.hoverColor || "#b561d2"};
   }
 `;
 
@@ -133,17 +117,19 @@ const Logs = () => {
   const locationsData = ["Store A", "Store B", "Store C"];
 
   return (
-    <PageContainer>
-      <BackButton onClick={() => window.history.back()}>Back</BackButton>
-      <GridContainer>
+    <LogsPageContainer>
+      {/* <BackButton onClick={() => window.history.back()}>Back</BackButton> */}
+      <LogsGrid>
         {locationsData.map((location, index) => {
-          const { randomId, manager, superManager } = generateRandomData();
+          const randomId = Math.floor(Math.random() * 1000);
+          const manager = `Manager ${index + 1}`;
+          const superManager = `Super Manager ${index + 1}`;
 
           return (
             <LogCard key={index}>
               <VideoWrapper>
                 <VideoElement controls>
-                  <source src="a.mp4" type="video/mp4" />
+                  <source src="cam11.mp4" type="video/mp4" />
                   Your browser does not support the video tag.
                 </VideoElement>
               </VideoWrapper>
@@ -152,19 +138,29 @@ const Logs = () => {
                   <VideoIcon>🎥</VideoIcon>
                   <Title>{location} - Detection Log</Title>
                 </Header>
-                <InfoText><strong>Detection ID:</strong> {randomId}</InfoText>
-                <InfoText><strong>Manager:</strong> {manager}</InfoText>
-                <InfoText><strong>Super Manager:</strong> {superManager}</InfoText>
+                <InfoText>
+                  <strong>Detection ID:</strong> {randomId}
+                </InfoText>
+                <InfoText>
+                  <strong>Manager:</strong> {manager}
+                </InfoText>
+                <InfoText>
+                  <strong>Super Manager:</strong> {superManager}
+                </InfoText>
               </InfoSection>
               <ButtonContainer>
-                <Button bgColor="#9f24c2">Print</Button>
-                <Button bgColor="#120428">Forward</Button>
+                <Button bgColor="#9f24c2" hoverColor="#b561d2">
+                  Print
+                </Button>
+                <Button bgColor="#1a1a2e" hoverColor="#333333">
+                  Forward
+                </Button>
               </ButtonContainer>
             </LogCard>
           );
         })}
-      </GridContainer>
-    </PageContainer>
+      </LogsGrid>
+    </LogsPageContainer>
   );
 };
 

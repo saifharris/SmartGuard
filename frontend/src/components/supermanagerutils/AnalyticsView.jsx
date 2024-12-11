@@ -5,13 +5,15 @@ import PieChart from "../adminutils/PieChart";
 import LineChart from "../adminutils/LineChart";
 import FunnelChart from "../adminutils/Funnel";
 import { IoMdAnalytics } from "react-icons/io";
-import { IoMdArrowBack } from "react-icons/io";
 
-// CSS for AnalyticsView
 const DashboardContainer = styled.div`
   width: 100%;
   height: 100%;
-  overflow-x: hidden; // Prevent horizontal overflow
+  background: #f5f5f5;
+  font-family: Arial, sans-serif;
+  position: relative;
+  padding: 2rem;
+  box-sizing: border-box;
 `;
 
 const Title = styled.div`
@@ -19,97 +21,94 @@ const Title = styled.div`
   align-items: center;
   justify-content: center;
   padding: 20px 0;
-  font-size: 36px;
-  color: #333;
+  font-size: 2.5rem;
+  color: #1a1a2e;
   font-weight: bold;
 `;
 
-const BackButton = styled.button`
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  background: linear-gradient(145deg, #5fe8ff, #e6f9ff);
-  color: #333;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 20px;
-  font-size: 16px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: linear-gradient(145deg, #ff5f7e, #ffe1e6);
-    color: white;
-  }
-
-  svg {
-    margin-right: 10px;
-  }
-`;
-
-const CardsSlider = styled.div`
-  display: flex;
-  overflow-x: auto;
-  scroll-behavior: smooth;
+const CardsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
   padding: 20px;
+  box-sizing: border-box;
 `;
 
 const Card = styled.div`
-  min-width: 300px;
-  height: 400px;
-  background: ${(props) =>
-    props.variant === "prioritized"
-      ? "linear-gradient(145deg, #ff5f7e, #ffe1e6)"
-      : "linear-gradient(145deg, #5fe8ff, #e6f9ff)"};
-  border-radius: 20px;
-  padding: 20px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: 24px;
-  font-weight: bold;
-  color: #333;
-  transition: transform 0.2s ease;
   text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
 
   &:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Accent bar using the manager analytics accent (#9f24c2) */
+  &::before {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 5px;
+    background: #9f24c2;
+    border-radius: 5px;
+    margin: 0 auto 1rem auto;
+  }
+
+  h2 {
+    color: #1a1a2e;
+    margin-bottom: 1rem;
+  }
+
+  .chart-container {
+    width: 100%;
+    height: 100%;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;
 
 const AnalyticsView = () => {
-  const goBack = () => {
-    window.history.back();
-  };
-
   return (
     <DashboardContainer>
-      <BackButton onClick={goBack}>
-        <IoMdArrowBack size={20} /> Back
-      </BackButton>
       <Title>
-        <IoMdAnalytics size={50} style={{ marginRight: "10px" }} /> Analytics
+        <IoMdAnalytics style={{ marginRight: "10px" }} /> Analytics
       </Title>
-      <CardsSlider>
-        <Card variant="prioritized">
-          <Histogram />
+      <CardsGrid>
+        <Card>
+          <h2>Histogram</h2>
+          <div className="chart-container">
+            <Histogram />
+          </div>
         </Card>
-        <Card variant="additional">
-          <PieChart />
+        <Card>
+          <h2>Pie Chart</h2>
+          <div className="chart-container">
+            <PieChart />
+          </div>
         </Card>
-        <Card variant="prioritized">
-          <LineChart />
+        <Card>
+          <h2>Line Chart</h2>
+          <div className="chart-container">
+            <LineChart />
+          </div>
         </Card>
-        <Card variant="additional">
-          <FunnelChart />
+        <Card>
+          <h2>Funnel Chart</h2>
+          <div className="chart-container">
+            <FunnelChart />
+          </div>
         </Card>
-      </CardsSlider>
+      </CardsGrid>
     </DashboardContainer>
   );
 };

@@ -1,215 +1,239 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import CreateManager from "./supermanagerutils/CreateManager";
 
+import SuperManagerVideoPage from "./supermanagerutils/SuperManagerVideoPage";
+
+import AnalyticsView from "./supermanagerutils/AnalyticsView";
+
 const App = () => {
-  const navigateToAnalytics = () => {
-    window.location.href = "/analytics";
-  };
-
-  const navigateToLearnMore = () => {
-    window.location.href = "/creatingmanager";
-  };
-
-  const navigateToExploreServices = () => {
-    window.location.href = "/logs";
-  };
-
-  const navigateToContactUs = () => {
-    window.location.href = "/videos";
-  };
+  const [activePage, setActivePage] = useState("Analytics");
 
   const handleLogout = () => {
     window.location.href = "/";
   };
 
-  return (
-    <div>
-      <Navbar>
-        <NavLinks>
-          <NavLink href="#home">Analytics</NavLink>
-          <NavLink href="#about">Add Manager</NavLink>
-          <NavLink href="#services">Logs</NavLink>
-          <NavLink href="#contact">Live Feeds</NavLink>
-        </NavLinks>
-        <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
-      </Navbar>
-      <Page id="home">
-        <Wrapper>
-          <ImageWrapper>
-            <Image src="analytics.png" alt="Analytics" />
-            <Button onClick={navigateToAnalytics}>Analytics</Button>
-          </ImageWrapper>
-        </Wrapper>
-      </Page>
-      <Page id="about">
+  const pages = {
+    Analytics: (
+     <AnalyticsView/>
+    ),
+    "Add Manager": (
+      <Card>
+        <CardTitle>Add Manager</CardTitle>
         <CreateManager />
-      </Page>
-      <Page id="services">
-        <Wrapper>
-          <ImageWrapper>
-            <Image src="logs.png" alt="Services" />
-            <Button onClick={navigateToExploreServices}>Get Logs</Button>
-          </ImageWrapper>
-        </Wrapper>
-      </Page>
-      <Page id="contact">
-        <Wrapper>
-          <ImageWrapper>
-            <Image src="feed.png" alt="Contact Us" />
-            <Button onClick={navigateToContactUs}>Live Feeds</Button>
-          </ImageWrapper>
-        </Wrapper>
-      </Page>
-      <Footer>
-        <FooterText>© 2024 Your Company Name. All rights reserved.</FooterText>
-      </Footer>
-    </div>
+      </Card>
+    ),
+    Logs: (
+      <Card>
+        <CardImageWrapper>
+          <CardImage src="logs.png" alt="Logs" />
+        </CardImageWrapper>
+        <CardTitle>Logs</CardTitle>
+        <CardButton onClick={() => (window.location.href = "/logs")}>
+          Get Logs
+        </CardButton>
+      </Card>
+    ),
+    "Live Feeds": (
+     <SuperManagerVideoPage />
+    ),
+  };
+
+  return (
+    <PageContainer>
+      <Sidebar>
+        <Logo>SmartGuard</Logo>
+        <SidebarNav>
+          {Object.keys(pages).map((page) => (
+            <SidebarNavLink
+              key={page}
+              active={activePage === page}
+              onClick={() => setActivePage(page)}
+            >
+              {page}
+            </SidebarNavLink>
+          ))}
+        </SidebarNav>
+      </Sidebar>
+
+      <ContentArea>
+        <Header>
+          <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+        </Header>
+
+        <Main>
+          {pages[activePage]}
+        </Main>
+
+        
+      </ContentArea>
+    </PageContainer>
   );
 };
 
 // Styled Components
-const Navbar = styled.nav`
-  position: sticky;
-  top: 0;
-  background: #120428;
+
+
+
+const PageContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 5%;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-  z-index: 1000;
+  min-height: 100vh;
+  background: #f5f5f5;
+  font-family: Arial, sans-serif;
 `;
 
-const NavLinks = styled.div`
+const Sidebar = styled.aside`
+  width: 250px;
+  background: linear-gradient(145deg, #9f24c2, #b561d2);
   display: flex;
-  justify-content: flex-start;
-  width: 65%;
+  flex-direction: column;
+  padding: 1rem;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
 `;
 
-const NavLink = styled.a`
-  text-decoration: none;
-  font-size: 1.2rem;
+const Logo = styled.h1`
+  color: #ffffff;
+  font-size: 1.5rem;
+  margin: 0 0 2rem;
+  text-align: center;
+`;
+
+const SidebarNav = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const SidebarNavLink = styled.button`
+  background: ${({ active }) => (active ? "#ffffff" : "transparent")};
+  color: ${({ active }) => (active ? "#9f24c2" : "#ffffff")};
+  border: none;
+  font-size: 1rem;
   font-weight: bold;
-  color: #9f24c2;
-  padding: 10px 20px;
-  border-radius: 5px;
-  transition: all 0.3s ease;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
 
   &:hover {
-    background: #9f24c2;
-    color: white;
+    background: #ffffff;
+    color: #9f24c2;
+    transform: translateY(-2px);
   }
+`;
+
+const ContentArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+`;
+
+const Header = styled.header`
+  
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #9f24c2;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 `;
 
 const LogoutButton = styled.button`
-  background: #9f24c2;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
+  background: #ffffff;
+  color: #9f24c2;
+  border: 2px solid #9f24c2;
+  border-radius: 8px;
+  padding: 0.5rem 1.5rem;
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 
   &:hover {
-    background: white;
-    color: #9f24c2;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    background: #f0f0f0;
+    transform: translateY(-2px);
   }
 `;
 
-const Page = styled.section`
-  height: 100vh;
+const Main = styled.main`
+  flex: 1;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 4rem 0;
+  background: #f5f5f5;
+  overflow: auto;
+`;
+
+const Card = styled.div`
+  background: #ffffff;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 20px rgba(0,0,0,0.1);
+  padding: 2rem;
   text-align: center;
-  background: ${(props) =>
-    props.id === "home"
-      ? "linear-gradient(180deg, #9f24c2, #120428)"
-      : props.id === "about"
-      ? "linear-gradient(180deg, #120428, #9f24c2)"
-      : props.id === "services"
-      ? "linear-gradient(180deg, #9f24c2, #120428)"
-      : "linear-gradient(180deg, #120428, #9f24c2)"};
-  color: #fff;
-  padding: 20px;
+  position: relative;
 
-  h1 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-  }
-
-  p {
-    font-size: 1.2rem;
-    max-width: 600px;
-    line-height: 1.6;
+  &::before {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 5px;
+    background: #9f24c2;
+    border-radius: 5px;
+    margin: 0 auto 1rem auto;
   }
 `;
 
-const Wrapper = styled.div`
-  position: relative;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  padding: 0;
-  max-width: 600px;
-  max-height: 400px;
+const CardImageWrapper = styled.div`
   width: 100%;
   height: auto;
-  text-align: center;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
-  overflow: hidden;
+  margin-bottom: 1.5rem;
 `;
 
-const ImageWrapper = styled.div`
-  position: relative;
+const CardImage = styled.img`
   width: 100%;
-  height: 100%;
-`;
-
-const Image = styled.img`
-  width: 100%;
-  height: 100%;
+  height: auto;
   object-fit: cover;
-  display: block;
+  border-radius: 10px;
 `;
 
-const Button = styled.button`
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(90deg, #9f24c2, #120428);
-  color: white;
+const CardTitle = styled.h2`
+  color: #1a1a2e;
+  margin-bottom: 1.5rem;
+`;
+
+const CardButton = styled.button`
+  background: linear-gradient(145deg, #9f24c2, #b561d2);
+  color: #ffffff;
   border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
   font-size: 1rem;
-  cursor: pointer;
   font-weight: bold;
-  transition: all 0.3s ease;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  font-family: inherit;
 
   &:hover {
-    background: white;
-    color: #9f24c2;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    background: #9f24c2;
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
   }
 `;
 
 const Footer = styled.footer`
-  background: #120428;
-  color: #fff;
+  background: #ffffff;
   text-align: center;
-  padding: 20px 0;
-  margin-top: auto;
-  box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.3);
+  padding: 1rem 0;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
 `;
 
 const FooterText = styled.p`
   font-size: 1rem;
+  color: #1a1a2e;
   margin: 0;
 `;
 

@@ -43,20 +43,23 @@ const SuperManagerVideoPage = () => {
   }
 
   return (
-    <VideoContainer>
-      <Header>Manager Videos</Header>
+    <PageContainer>
+      <Title>Manager Videos</Title>
       {managers.length === 0 ? (
         <NoVideos>No videos available</NoVideos>
       ) : (
         managers.map((manager, managerIndex) => (
-          <ManagerSection key={managerIndex}>
-            <ImageWrapper>
-              <ManagerImage
-                src="manager.png" // Single image for all managers
-                alt="Manager Profile"
-              />
-            </ImageWrapper>
-            <ManagerName>{manager.username}</ManagerName>
+          <ManagerCard key={managerIndex}>
+            <CardAccentBar />
+            <ManagerHeader>
+              <ImageWrapper>
+                <ManagerImage
+                  src="manager.png" // Single image for all managers
+                  alt="Manager Profile"
+                />
+              </ImageWrapper>
+              <ManagerName>{manager.username}</ManagerName>
+            </ManagerHeader>
             {manager.videoUrls && manager.videoUrls.length > 0 ? (
               <VideoGrid>
                 {manager.videoUrls.map((video, index) => (
@@ -76,76 +79,96 @@ const SuperManagerVideoPage = () => {
             ) : (
               <NoVideos>No videos uploaded</NoVideos>
             )}
-          </ManagerSection>
+          </ManagerCard>
         ))
       )}
-    </VideoContainer>
+    </PageContainer>
   );
 };
 
 // Styled Components
-const VideoContainer = styled.div`
-  padding: 20px;
-  background: linear-gradient(145deg, #ffffff, #f7f7f7);
+
+const PageContainer = styled.div`
+  padding: 2rem;
+  background: #f5f5f5;
   min-height: 100vh;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
 `;
 
-const Header = styled.h2`
+const Title = styled.h2`
   text-align: center;
-  color: #ff6e89;
+  color: #1a1a2e;
   font-size: 2rem;
-  margin-bottom: 30px;
+  margin-bottom: 2rem;
 `;
 
-const ManagerSection = styled.div`
-  margin-bottom: 40px;
+const ManagerCard = styled.div`
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0px 4px 20px rgba(0,0,0,0.1);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  position: relative;
   text-align: center;
+`;
+
+const CardAccentBar = styled.div`
+  content: "";
+  display: block;
+  width: 60px;
+  height: 5px;
+  background: #9f24c2;
+  border-radius: 5px;
+  margin: 0 auto 1.5rem auto;
+`;
+
+const ManagerHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
 `;
 
 const ImageWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
 `;
 
 const ManagerImage = styled.img`
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  border: 2px solid #ff6e89;
+  border: 2px solid #9f24c2;
   object-fit: cover;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 `;
 
 const ManagerName = styled.h3`
   font-size: 1.5rem;
-  color: #333;
-  background: #ff6e89;
-  color: white;
-  padding: 10px;
-  border-radius: 10px;
-  text-transform: capitalize;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  color: #1a1a2e;
+  margin: 0;
+  font-weight: bold;
 `;
 
 const VideoGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 1rem;
   justify-content: center;
 `;
 
 const VideoItem = styled.div`
-  flex: 1 1 calc(50% - 10px); /* Two videos side by side with a small gap */
-  max-width: calc(50% - 10px);
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  flex: 1 1 calc(50% - 1rem); /* Two videos per row */
+  max-width: calc(50% - 1rem);
   border-radius: 10px;
   overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.05);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
-    transform: scale(1.02);
-    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.1);
   }
 
   @media (max-width: 768px) {
@@ -156,7 +179,7 @@ const VideoItem = styled.div`
 
 const Loading = styled.div`
   text-align: center;
-  color: #ff6e89;
+  color: #9f24c2;
   font-size: 1.5rem;
   margin-top: 50px;
 `;
@@ -170,7 +193,7 @@ const Error = styled.div`
 
 const NoVideos = styled.div`
   text-align: center;
-  color: #333;
+  color: #1a1a2e;
   font-size: 1.2rem;
   margin-top: 20px;
 `;

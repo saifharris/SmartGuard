@@ -18,13 +18,13 @@ RECOGNITION_THRESHOLD = 0.80
 def initialize_models():
     """Initializes and returns the required models and encoders."""
     facenet = FaceNet()
-    faces_embeddings = np.load("faces_embeddings_done_4classes.npz")
+    faces_embeddings = np.load("/home/etherealumer/Desktop/tf/mc-mot/againNEw/SmartGuard/backend/faces_embeddings_done_4classes.npz")
     Y = faces_embeddings['arr_1']
     encoder = LabelEncoder()
     encoder.fit(Y)
-    model = pickle.load(open("/home/etherealumer/Desktop/tf/FYPSmartGuard/Backend/svm_model_160x160.pkl", 'rb'))
-    modelFile = "/home/etherealumer/Desktop/tf/FYPSmartGuard/Backend/res10_300x300_ssd_iter_140000_fp16.caffemodel"
-    configFile = "/home/etherealumer/Desktop/tf/FYPSmartGuard/Backend/deploy.prototxt"
+    model = pickle.load(open("/home/etherealumer/Desktop/tf/mc-mot/againNEw/SmartGuard/backend/svm_model_160x160.pkl", 'rb'))
+    modelFile = "/home/etherealumer/Desktop/tf/mc-mot/againNEw/SmartGuard/backend/res10_300x300_ssd_iter_140000_fp16.caffemodel"
+    configFile = "/home/etherealumer/Desktop/tf/mc-mot/againNEw/SmartGuard/backend/deploy.prototxt"
     net = cv.dnn.readNetFromCaffe(configFile, modelFile)
     return facenet, encoder, model, net
 

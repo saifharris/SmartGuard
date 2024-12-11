@@ -25,7 +25,7 @@ const CreateManager = () => {
         formDataToSend.append("videos", video);
       });
 
-      const res = await axios.post(
+      await axios.post(
         "http://localhost:5000/api/auth/create-manager",
         formDataToSend,
         {
@@ -44,12 +44,14 @@ const CreateManager = () => {
 
   return (
     <Form onSubmit={handleCreateManager}>
-      <h3>Create Manager</h3>
+      <CardAccent />
+      <FormTitle>Create Manager</FormTitle>
       {successMessage && <SuccessMessage>{successMessage}</SuccessMessage>}
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-      <div>
-        <label>Username</label>
-        <input
+
+      <FormGroup>
+        <Label>Username</Label>
+        <Input
           type="text"
           value={formData.username}
           onChange={(e) =>
@@ -57,10 +59,11 @@ const CreateManager = () => {
           }
           required
         />
-      </div>
-      <div>
-        <label>Password</label>
-        <input
+      </FormGroup>
+
+      <FormGroup>
+        <Label>Password</Label>
+        <Input
           type="password"
           value={formData.password}
           onChange={(e) =>
@@ -68,10 +71,11 @@ const CreateManager = () => {
           }
           required
         />
-      </div>
-      <div>
-        <label>Upload Videos (Max 2)</label>
-        <input
+      </FormGroup>
+
+      <FormGroup>
+        <Label>Upload Videos (Max 2)</Label>
+        <Input
           type="file"
           accept="video/*"
           multiple
@@ -79,108 +83,124 @@ const CreateManager = () => {
             setFormData({ ...formData, videos: [...e.target.files] })
           }
         />
-      </div>
-      <button type="submit">Create Manager</button>
+      </FormGroup>
+
+      <SubmitButton type="submit">Create Manager</SubmitButton>
     </Form>
   );
 };
 
 const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 30px;
-  border-radius: 12px;
-  background: linear-gradient(145deg, #ece9f0, #ffffff);
-  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.2), inset 0px -2px 10px rgba(255, 255, 255, 0.5);
-  max-width: 600px; /* Increased the width */
-  margin: 20px auto;
+  box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0px 4px 20px rgba(0,0,0,0.1);
+  padding: 2rem;
+  max-width: 500px;
+  margin: 2rem auto;
+  position: relative;
+  font-family: Arial, sans-serif;
+`;
 
-  h3 {
-    font-size: 2.2rem; /* Increased heading size */
-    margin-bottom: 20px;
-    color: #4a4e69;
-    text-align: center;
-    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  }
+const CardAccent = styled.div`
+  box-sizing: border-box;
+  content: "";
+  display: block;
+  width: 60px;
+  height: 5px;
+  background: #9f24c2;
+  border-radius: 5px;
+  margin: 0 auto 1.5rem auto;
+`;
 
-  div {
-    margin-bottom: 15px;
-
-    label {
-      display: block;
-      margin-bottom: 10px;
-      font-size: 1.2rem; /* Increased label size */
-      color: #22223b;
-      font-weight: bold;
-    }
-
-    input {
-      width: calc(100% - 20px); /* Added horizontal padding */
-      padding: 15px;
-      margin: 0 10px; /* Space on left and right */
-      border: none;
-      border-radius: 8px;
-      font-size: 1.1rem; /* Larger font size */
-      background: #f4f4f8;
-      box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1);
-      transition: box-shadow 0.3s ease, transform 0.2s ease;
-
-      &:focus {
-        outline: none;
-        box-shadow: 0px 0px 5px rgba(78, 115, 223, 0.5);
-        transform: scale(1.02);
-      }
-    }
-  }
-
-  button {
-    width: 100%;
-    padding: 15px; /* Larger button size */
-    background: linear-gradient(135deg, #6c63ff, #4a4e69);
-    color: white;
-    font-size: 1.3rem; /* Larger button text */
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-
-    &:hover {
-      background: linear-gradient(135deg, #4a4e69, #6c63ff);
-      transform: translateY(-2px);
-      box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    &:active {
-      transform: translateY(0);
-      box-shadow: none;
-    }
-  }
+const FormTitle = styled.h3`
+  box-sizing: border-box;
+  font-size: 1.8rem;
+  color: #1a1a2e;
+  text-align: center;
+  margin-bottom: 1.5rem;
 `;
 
 const SuccessMessage = styled.div`
+  box-sizing: border-box;
   color: #2e7d32;
-  font-size: 1.1rem; /* Slightly larger success message */
+  font-size: 1rem;
   text-align: center;
-  margin-bottom: 15px;
+  margin-bottom: 1rem;
   background: #e8f5e9;
-  padding: 15px; /* More padding for larger form */
+  padding: 0.75rem;
   border-radius: 8px;
-  box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1);
 `;
 
 const ErrorMessage = styled.div`
+  box-sizing: border-box;
   color: #c62828;
-  font-size: 1.1rem; /* Slightly larger error message */
+  font-size: 1rem;
   text-align: center;
-  margin-bottom: 15px;
+  margin-bottom: 1rem;
   background: #ffebee;
-  padding: 15px; /* More padding for larger form */
+  padding: 0.75rem;
   border-radius: 8px;
-  box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1);
 `;
 
+const FormGroup = styled.div`
+  box-sizing: border-box;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
 
+const Label = styled.label`
+  box-sizing: border-box;
+  font-size: 1rem;
+  color: #1a1a2e;
+  font-weight: bold;
+`;
+
+const Input = styled.input`
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #b561d2;
+  border-radius: 8px;
+  background: #ffffff;
+  font-size: 1rem;
+  color: #1a1a2e;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #9f24c2;
+    background-color: #f9f9ff;
+  }
+`;
+
+const SubmitButton = styled.button`
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.75rem;
+  background: linear-gradient(145deg, #9f24c2, #b561d2);
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  margin-top: 1rem;
+
+  &:hover {
+    background: #9f24c2;
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+`;
 
 export default CreateManager;
